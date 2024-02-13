@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Document - {{ filename }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+        }
+        .page {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .page img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        .filename {
+            font-size: 18px; /* Уменьшаем размер шрифта */
+            margin-bottom: 10px; /* Уменьшаем отступ снизу */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="filename">{{ filename }}</h1>
+        {% for image in images %}
+        <div class="page">
+            <img src="data:image/png;base64,{{ image }}" alt="Page {{ loop.index }}">
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
+<!-- ывпиыквркы -->

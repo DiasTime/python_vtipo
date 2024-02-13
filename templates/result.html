@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename=css_file) }}">
+</head>
+<body>
+    <div class="container">
+        <h1>File Content:</h1>
+        <p>{{ text }}</p>
+    </div>
+
+    <form action="/apply_style" method="get">
+        <label for="style_select">Select Style:</label>
+        <select id="style_select" name="style">
+            <option value="style1.css">Style 1</option>
+            <option value="style2.css">Style 2</option>
+            <!-- Add more options as needed -->
+        </select>
+        <input type="hidden" name="text" value="{{ text }}">
+        <input type="submit" value="Apply Style">
+    </form>
+</body>
+</html>

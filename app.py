@@ -78,6 +78,25 @@ def process_pdf(file_path):
             images.append(image_base64)
     return filename, images
 
+def process_pdf(file_path):
+    images = []
+    filename = os.path.basename(file_path)  # Получаем имя файла из пути
+    with fitz.open(file_path) as pdf:
+        for page in pdf:
+            # Получаем изображение страницы PDF в формате RGBA
+            pixmap = page.get_pixmap(alpha=True)
+            # Создаем объект Image из библиотеки PIL на основе pixmap
+            img = Image.frombytes("RGBA", [pixmap.width, pixmap.height], pixmap.samples)
+            # Создаем объект BytesIO для записи изображения
+            image_stream = BytesIO()
+            # Сохраняем изображение в формате PNG в объект BytesIO
+            img.save(image_stream, format="PNG")
+            # Получаем данные изображения в виде байтовой строки
+            image_base64 = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+            # Добавляем закодированное изображение в список
+            images.append(image_base64)
+    return filename, images
+
 
 if __name__ == '__main__':
     app.run(debug=True)

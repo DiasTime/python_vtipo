@@ -26,6 +26,24 @@ README (Russian):
    python app.py
    ```
 
+## ВСЕ PIP INSTALLЫ
+
+pip install Flask
+pip install python-docx
+pip install python-pptx
+pip install Pillow
+pip install PyMuPDF
+pip install Wand
+
+
+
+
+
+
+
+
+
+
 ## Использование
 
 1. Запустите приложение и откройте браузер.

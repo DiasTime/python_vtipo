@@ -85,10 +85,3 @@ def process_pdf(file_path):
 
 if __name__ == '__main__':
     app.run(debug=True)
-# degvsivbdsi
-    
-
-    # ИДИ НАХУЙ ШЛЮХА
-
-
-    # иди нахуй бла бла

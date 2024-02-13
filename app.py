@@ -96,6 +96,7 @@ def process_pdf(file_path):
             # Добавляем закодированное изображение в список
             images.append(image_base64)
     return filename, images
+# ddd
 
 
 if __name__ == '__main__':

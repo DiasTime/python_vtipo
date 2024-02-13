@@ -79,11 +79,5 @@ def process_pdf(file_path):
     return filename, images
 
 
-
-
-
-
 if __name__ == '__main__':
     app.run(debug=True)
-#изменяйте здесь что-угодно
-    # sdnhhnrsnhb

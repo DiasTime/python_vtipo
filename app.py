@@ -25,7 +25,7 @@ def index():
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
-                return render_template('word_template.html', text=text, filename=filename)
+                return render_template('word_template.html', text=text, filename=filename) 
             
             elif filename.endswith('.pdf'):
                 filename, images = process_pdf(file_path)

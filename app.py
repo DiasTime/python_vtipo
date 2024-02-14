@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory,send_file
 import os
 from docx import Document
 from pptx import Presentation
@@ -10,6 +10,9 @@ import PyPDF2
 from wand.image import Image as WandImage
 import yadisk
 import mysql.connector
+import tempfile
+
+
 
 app = Flask(__name__)
 
@@ -30,7 +33,10 @@ y = yadisk.YaDisk(token="y0_AgAAAAAl5jRpAAtKfAAAAAD6_t3BAABRqHACUIJMrJ4PRAckXHu7
 
 def list_files_on_yadisk(folder_path):
     files = y.listdir(folder_path)
-    return files
+    # Преобразуем генератор в список кортежей
+    files_list = [(file.name, file.path) for file in files]
+    return files_list
+
 
 # Получение списка файлов из базы данных
 def list_files_from_database():
@@ -40,7 +46,11 @@ def list_files_from_database():
 
 # Функция для сохранения файла на Яндекс.Диск
 def save_to_yadisk(file_path):
-    y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
+    # Проверяем, начинается ли имя файла с префикса temp_
+    if not os.path.basename(file_path).startswith('temp_'):
+        # Если имя файла не начинается с префикса temp_, загружаем его на Яндекс.Диск
+        y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -51,15 +61,22 @@ def index():
         file = request.files['file']
         if file:
             filename = file.filename
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
 
-            # Сохранение файла на Яндекс.Диск
-            save_to_yadisk(file_path)
+            # Проверяем, есть ли файл уже на Яндекс.Диске
+            existing_file = next((f for f in yadisk_files if f[1] == filename), None)
+            if existing_file:
+                # Если файл уже есть на Яндекс.Диске, создаем ссылку на него
+                file_url = url_for('open_from_yadisk', file_path=existing_file[1])
+            else:
+                # Если файла нет на Яндекс.Диске, сохраняем его туда и в базу данных
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                save_to_yadisk(file_path)
 
-            # Сохранение информации о файле в базе данных
-            cursor.execute("INSERT INTO files (filename, file_path) VALUES (%s, %s)", (filename, file_path))
-            db.commit()
+                cursor.execute("INSERT INTO files (filename, file_path) VALUES (%s, %s)", (filename, file_path))
+                db.commit()
+
+                file_url = url_for('open_from_yadisk', file_path=f'/uploads/{filename}')
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
@@ -81,16 +98,27 @@ def index():
     return render_template('index.html', yadisk_files=yadisk_files, db_files=db_files)
 
 
+
+
 @app.route('/open_from_yadisk/<path:file_path>')
 def open_from_yadisk(file_path):
-    file_data = y.get(file_path).text
-    return file_data
+    temp_file = f"temp_{os.path.basename(file_path)}"
+    with open(temp_file, "wb") as f:
+        y.download(file_path, f)
+
+    return send_file(temp_file, as_attachment=True)
 
 @app.route('/open_from_db/<path:file_path>')
 def open_from_db(file_path):
-    with open(file_path, 'r') as file:
-        file_data = file.read()
-    return file_data
+    encodings = ['utf-8', 'latin-1']  # список возможных кодировок
+    for encoding in encodings:
+        try:
+            with open(file_path, 'rb') as file:
+                file_data = file.read().decode(encoding)
+            return file_data
+        except UnicodeDecodeError:
+            continue
+    return "Failed to decode file"
 
 @app.route('/files', methods=['GET'])
 def list_files():

@@ -165,16 +165,16 @@
 </head>
 <body>
     <div class="container">
-        <h2>Загрузите файл:</h2>
+        <h2>Открыть файл:</h2>
         <form action="/" method="post" enctype="multipart/form-data">
             <input type="file" name="file" accept=".docx, .pdf, .pptx">
             <input type="submit" value="Открыть">
         </form>
 
-        <h2>Загруженные файлы:</h2>
+        <h2>Скачать ранее открытые файлы:</h2>
         <ul>
             {% for file in yadisk_files %}
-            <li><a href="{{ url_for('open_from_yadisk', file_path=file[1]) }}" target="_blank">{{ file[1] }}</a></li>
+            <li><a href="{{ url_for('open_from_yadisk', file_path=file[1]) }}" target="_blank">{{ file[1].split('/')[-1] }}</a></li>
             {% endfor %}
         </ul>
     </div>

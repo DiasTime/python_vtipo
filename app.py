@@ -34,7 +34,7 @@ def list_files_on_yadisk(folder_path):
 
 # Получение списка файлов из базы данных
 def list_files_from_database():
-    cursor.execute("SELECT filename, file_path FROM files")
+    cursor.execute("SELECT * from files")
     files = cursor.fetchall()
     return files
 

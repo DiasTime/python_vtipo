@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список файлов</title>
+</head>
+<body>
+    <h1>Список загруженных файлов</h1>
+    <ul>
+    {% for file in files %}
+        <li><a href="{{ url_for('uploaded_file', filename=file[1]) }}">{{ file[1] }}</a></li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

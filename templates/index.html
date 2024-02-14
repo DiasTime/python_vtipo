@@ -10,5 +10,12 @@
         <input type="file" name="file" accept=".docx, .pdf, .pptx">
         <input type="submit" value="Upload">
     </form>
+
+    <h2>Files Uploaded to Yandex Disk:</h2>
+    <ul>
+        {% for file in yadisk_files %}
+        <li><a href="{{ url_for('uploaded_file', filename=file[1]) }}">{{ file[1] }}</a></li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

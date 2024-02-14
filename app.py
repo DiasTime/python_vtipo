@@ -8,20 +8,58 @@ import base64
 import fitz
 import PyPDF2
 from wand.image import Image as WandImage
+import yadisk
+import mysql.connector
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Подключение к MySQL базе данных
+db = mysql.connector.connect(
+    host="127.0.0.1",
+    user="dias",
+    password="3418",
+    database="files"
+)
+cursor = db.cursor()
+
+# Токен для доступа к Яндекс.Диску
+y = yadisk.YaDisk(token="y0_AgAAAAAl5jRpAAtKfAAAAAD6_t3BAABRqHACUIJMrJ4PRAckXHu7iVOojw")
+
+def list_files_on_yadisk(folder_path):
+    files = y.listdir(folder_path)
+    return files
+
+# Получение списка файлов из базы данных
+def list_files_from_database():
+    cursor.execute("SELECT filename, file_path FROM files")
+    files = cursor.fetchall()
+    return files
+
+# Функция для сохранения файла на Яндекс.Диск
+def save_to_yadisk(file_path):
+    y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    yadisk_files = list_files_on_yadisk('/uploads')
+    db_files = list_files_from_database()
+
     if request.method == 'POST':
         file = request.files['file']
         if file:
             filename = file.filename
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
+
+            # Сохранение файла на Яндекс.Диск
+            save_to_yadisk(file_path)
+
+            # Сохранение информации о файле в базе данных
+            cursor.execute("INSERT INTO files (filename, file_path) VALUES (%s, %s)", (filename, file_path))
+            db.commit()
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
@@ -39,8 +77,26 @@ def index():
                 text = "Unsupported file format"
                 slides_data = [{"text": text, "images": []}]
                 return render_template('pptx_template.html', slides=slides_data, filename=filename)
-    
-    return render_template('index.html')
+            
+    return render_template('index.html', yadisk_files=yadisk_files, db_files=db_files)
+
+
+@app.route('/open_from_yadisk/<path:file_path>')
+def open_from_yadisk(file_path):
+    file_data = y.get(file_path).text
+    return file_data
+
+@app.route('/open_from_db/<path:file_path>')
+def open_from_db(file_path):
+    with open(file_path, 'r') as file:
+        file_data = file.read()
+    return file_data
+
+@app.route('/files', methods=['GET'])
+def list_files():
+    cursor.execute("SELECT id, filename, file_path FROM files")
+    files = cursor.fetchall()
+    return render_template('files.html', files=files)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -95,8 +151,6 @@ def process_pptx(file_path):
                 slide_data["images"].append(image_data)
         slides_data.append(slide_data)
     return slides_data
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

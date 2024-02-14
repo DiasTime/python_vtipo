@@ -22,9 +22,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Подключение к MySQL базе данных
 db = mysql.connector.connect(
-    host="127.0.0.1",
-    user="dias",
-    password="3418",
+    host="192.168.68.102",
+    user="python",
+    password="12345",
     database="files"
 )
 cursor = db.cursor()

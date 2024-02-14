@@ -11,6 +11,7 @@ from wand.image import Image as WandImage
 import yadisk
 import mysql.connector
 import tempfile
+from flask import Flask, render_template, request, send_from_directory, url_for
 
 
 
@@ -68,15 +69,21 @@ def index():
                 # Если файл уже есть на Яндекс.Диске, создаем ссылку на него
                 file_url = url_for('open_from_yadisk', file_path=existing_file[1])
             else:
-                # Если файла нет на Яндекс.Диске, сохраняем его туда и в базу данных
+                # Если файла нет на Яндекс.Диске, сохраняем его туда
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
-                save_to_yadisk(file_path)
 
-                cursor.execute("INSERT INTO files (filename, file_path) VALUES (%s, %s)", (filename, file_path))
-                db.commit()
+                # Проверяем, начинается ли имя файла с префикса temp_
+                if not filename.startswith('temp_'):
+                    # Если нет, добавляем информацию о файле в базу данных
+                    save_to_yadisk(file_path)
+                    cursor.execute("INSERT INTO files (filename, file_path) VALUES (%s, %s)", (filename, file_path))
+                    db.commit()
 
-                file_url = url_for('open_from_yadisk', file_path=f'/uploads/{filename}')
+                    file_url = url_for('open_from_yadisk', file_path=f'/uploads/{filename}')
+                else:
+                    # Если имя файла начинается с префикса temp_, не добавляем его в базу данных
+                    file_url = None
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
@@ -96,6 +103,7 @@ def index():
                 return render_template('pptx_template.html', slides=slides_data, filename=filename)
             
     return render_template('index.html', yadisk_files=yadisk_files, db_files=db_files)
+
 
 
 

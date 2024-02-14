@@ -6,39 +6,62 @@
     <title>Word Document - {{ filename }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #2196F3, #42A5F5);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+            color: #333;
         }
         .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            overflow: auto;
+            width: 95%; /* Увеличиваем ширину контейнера */
+            max-width: 1000px; /* Максимальная ширина контейнера */
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        h1 {
-            font-size: 24px;
-            color: #333333;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #cccccc;
-            padding-bottom: 10px;
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .header {
+            background-color: #2196F3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .content {
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+            font-size: 16px;
+        }
+        p:first-child {
+            text-indent: 0;
+            font-weight: bold;
         }
         p {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            text-indent: 20px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>{{ filename }}</h1>
-        {% for paragraph in text.split('\n') %}
-        <p>{{ paragraph }}</p>
-        {% endfor %}
+        <div class="header">
+            <h1>{{ filename }}</h1>
+        </div>
+        <div class="content">
+            {% for paragraph in text.split('\n') %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

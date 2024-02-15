@@ -122,9 +122,9 @@ def process_pptx(file_path):
     return slides_data
 
 if __name__ == '__main__':
-    import bjoern
-    bjoern.run(app, "127.0.0.1", 8000)
+    # import bjoern
+    # bjoern.run(app, "127.0.0.1", 8000)
 
-    # app.run(debug=True)
+    app.run(debug=True)
 
 # dwdwd

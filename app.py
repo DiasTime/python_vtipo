@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Подключение к MySQL базе данных
 db = mysql.connector.connect(
-    host="127.0.0.1",
+    host="192.168.68.102",
     user="python",
     password="12345",
     database="files"
@@ -103,7 +103,22 @@ def index():
             
     return render_template('index.html', yadisk_files=yadisk_files, db_files=db_files)
 
-
+@app.route('/clear_data', methods=['GET'])
+def clear_data():
+    # Проверяем, пришло ли ключевое слово 'clear_all_data' в параметрах запроса
+    if request.args.get('key') == 'clear_all_data':
+        # Очищаем данные из таблицы files в базе данных
+        cursor.execute("DELETE FROM files")
+        db.commit()
+        
+        # Удаляем все файлы в папке uploads на Яндекс.Диске
+        yadisk_files = list_files_on_yadisk('/uploads')
+        for file in yadisk_files:
+            y.remove(file[1])
+        
+        return "Data cleared successfully."
+    else:
+        return "Invalid key."
 
 
 

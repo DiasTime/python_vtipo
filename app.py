@@ -22,7 +22,10 @@ def list_files_on_yadisk(folder_path):
     return files_list
 
 def save_to_yadisk(file_path):
-    y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
+    # Проверяем, начинается ли имя файла с префикса temp_
+    if not os.path.basename(file_path).startswith('temp_'):
+        # Если имя файла не начинается с префикса temp_, загружаем его на Яндекс.Диск
+        y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

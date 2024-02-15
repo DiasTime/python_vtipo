@@ -4,6 +4,11 @@
 
 
 
+CREATE TABLE files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(255),
+    file_path VARCHAR(255)
+);
 
 
 README (Russian):
@@ -41,7 +46,7 @@ pip install python-docx
 pip install python-pptx
 pip install Pillow
 pip install PyMuPDF
-pip install Wand
+pip install yadisk
 
 
 

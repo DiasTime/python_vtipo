@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory,send_file
+from flask import Flask, render_template, request, send_from_directory,send_file, url_for
 import os
 from docx import Document
 from pptx import Presentation
@@ -6,12 +6,11 @@ from PIL import Image
 from io import BytesIO
 import base64
 import fitz
-import PyPDF2
-from wand.image import Image as WandImage
+
+
 import yadisk
 import mysql.connector
-import tempfile
-from flask import Flask, render_template, request, send_from_directory, url_for
+
 
 
 
@@ -22,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Подключение к MySQL базе данных
 db = mysql.connector.connect(
-    host="192.168.68.102",
+    host="127.0.0.1",
     user="python",
     password="12345",
     database="files"

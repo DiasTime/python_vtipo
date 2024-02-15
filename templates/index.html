@@ -9,13 +9,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #F2D8D8; /* Set background color to light pink */
+            background-color: #99A7C2; /* Set background color to light pink */
             color: #374259; /* Set text color to dark blue */
         }
         .container {
             max-width: 600px;
             margin: 20px auto;
-            background-color: #fff; /* Set container background color to white */
+            background-color: #eeebeb; /* Set container background color to white */
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 30px;
@@ -37,8 +37,8 @@
             color: #545B77; /* Set heading color to grayish blue */
             font-weight: bold;
             text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            text-transform: capitalize;
+            
             animation: slideInDown 0.8s ease-out;
         }
         @keyframes slideInDown {
@@ -74,7 +74,7 @@
             border: none;
             border-radius: 8px;
             font-size: 16px;
-            background-color: #5C8984; /* Set button background color to dark cyan */
+            background-color: #99A7C2; /* Set button background color to dark cyan */
             color: #fff; /* Set button text color to white */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -86,27 +86,32 @@
         }
         input[type="file"]:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
             background-color: #374259; /* Darken button background color on hover */
         }
         input[type="submit"] {
             padding: 15px 30px;
-            background-color: #545B77; /* Set button background color to grayish blue */
+            background-color: #99A7C2; /* Set button background color to grayish blue */
             color: #fff; /* Set button text color to white */
             border: none;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
             outline: none;
             width: 80%;
             max-width: 400px;
-            text-transform: uppercase;
+            text-transform: capitalize  ;
             letter-spacing: 1px;
-            border-bottom: 3px solid #374259; /* Set button border color to dark blue */
+
+
+            /* border-bottom: 3px solid #374259; Set button border color to dark blue */
         }
         input[type="submit"]:hover {
             background-color: #374259; /* Darken button background color on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            
         }
         ul {
             list-style-type: none;
@@ -148,9 +153,10 @@
             color: #545B77; /* Set link color to grayish blue */
             font-weight: bold;
             transition: color 0.3s;
+            text-transform: capitalize;
         }
         li a:hover {
-            color: #5C8984; /* Darken link color on hover */
+            color: #99A7C2; /* Darken link color on hover */
         }
         @media screen and (max-width: 500px) {
             .container {
@@ -167,7 +173,7 @@
     <div class="container">
         <h2>Открыть файл:</h2>
         <form action="/" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".docx, .pdf, .pptx">
+            <input type="file" name="file" accept=".docx, .pdf, .pptx" title=" ">
             <input type="submit" value="Открыть">
         </form>
 

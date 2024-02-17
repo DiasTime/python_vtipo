@@ -7,8 +7,10 @@ from io import BytesIO
 import base64
 import fitz
 import yadisk
+import webview
 
 app = Flask(__name__)
+window = webview.create_window('dias_app',app)
 
 # Токен для доступа к Яндекс.Диску
 y = yadisk.YaDisk(token="y0_AgAAAAAl5jRpAAtKfAAAAAD6_t3BAABRqHACUIJMrJ4PRAckXHu7iVOojw")
@@ -122,9 +124,4 @@ def process_pptx(file_path):
     return slides_data
 
 if __name__ == '__main__':
-    # import bjoern
-    # bjoern.run(app, "127.0.0.1", 8000)
-
-    app.run(debug=True)
-
-# dwdwd
+  webview.start()

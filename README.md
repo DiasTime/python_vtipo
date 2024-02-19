@@ -6,7 +6,7 @@
 
 1. Установите необходимые зависимости, выполнив следующую команду:
    ```
-   pip install Flask python-docx python-pptx Pillow PyMuPDF yadisk requests
+   pip install Flask python-docx python-pptx Pillow PyMuPDF yadisk requests pywebview
    ```
 
 2. Клонируйте репозиторий:

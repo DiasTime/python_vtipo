@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #99A7C2; /* Set background color to light pink */
+            color: #374259; /* Set text color to dark blue */
+        }
+        .container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #eeebeb; /* Set container background color to white */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #545B77; /* Set heading color to grayish blue */
+            font-weight: bold;
+            text-align: center;
+            text-transform: capitalize;
+            animation: slideInDown 0.8s ease-out;
+        }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        form {
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideInUp 0.8s ease-out;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        input[type="submit"] {
+            padding: 15px 30px;
+            background-color: #99A7C2; /* Set button background color to grayish blue */
+            color: #fff; /* Set button text color to white */
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            width: 80%;
+            max-width: 300px;
+            text-transform: capitalize;
+            letter-spacing: 1px;
+        }
+        input[type="submit"]:hover {
+            background-color: #374259; /* Darken button background color on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        @media screen and (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Choose your role:</h2>
+        <form action="/login" method="post">
+            <input type="submit" name="role" value="Teacher">
+            <input type="submit" name="role" value="Student">
+        </form>
+    </div>
+</body>
+</html>

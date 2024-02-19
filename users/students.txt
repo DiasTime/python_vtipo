@@ -1,0 +1,16 @@
+[
+    {
+        "username": "student1",
+        "password": "hashed_password_3",
+        "role": "student",
+        "name": "Alice Johnson",
+        "email": "student1@example.com"
+    },
+    {
+        "username": "student2",
+        "password": "hashed_password_4",
+        "role": "student",
+        "name": "Bob Brown",
+        "email": "student2@example.com"
+    }
+]

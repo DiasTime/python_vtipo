@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #99A7C2; /* Set background color to light pink */
+            color: #374259; /* Set text color to dark blue */
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #eeebeb; /* Set container background color to white */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #545B77; /* Set heading color to grayish blue */
+            font-weight: bold;
+            text-align: center;
+            text-transform: capitalize;
+            
+            animation: slideInDown 0.8s ease-out;
+        }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        form {
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideInUp 0.8s ease-out;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #99A7C2; /* Set button background color to dark cyan */
+            color: #fff; /* Set button text color to white */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            outline: none;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            cursor: pointer;
+        }
+        input[type="file"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            background-color: #374259; /* Darken button background color on hover */
+        }
+        input[type="submit"] {
+            padding: 15px 30px;
+            background-color: #99A7C2; /* Set button background color to grayish blue */
+            color: #fff; /* Set button text color to white */
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            width: 80%;
+            max-width: 400px;
+            text-transform: capitalize  ;
+            letter-spacing: 1px;
+        }
+        input[type="submit"]:hover {
+            background-color: #374259; /* Darken button background color on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            animation: slideIn 0.8s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        li {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li a {
+            text-decoration: none;
+            color: #545B77; /* Set link color to grayish blue */
+            font-weight: bold;
+            transition: color 0.3s;
+            text-transform: capitalize;
+        }
+        li a:hover {
+            color: #99A7C2; /* Darken link color on hover */
+        }
+        @media screen and (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            input[type="file"],
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Files:</h2>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".docx, .pdf, .pptx" title=" ">
+            <input type="submit" value="Upload">
+        </form>
+
+        <h2>Download Previously Uploaded Files:</h2>
+        <ul>
+            {% for file in yadisk_files %}
+            <li><a href="{{ url_for('open_from_yadisk', file_path=file[1]) }}" target="_blank">{{ file[1].split('/')[-1] }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

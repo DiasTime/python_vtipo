@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, send_from_directory, send_file, url_for, redirect, flash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory, send_file
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 import os
 from docx import Document
 from pptx import Presentation
@@ -8,7 +8,6 @@ from io import BytesIO
 import base64
 import fitz
 import yadisk
-import webview
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -20,8 +19,6 @@ y = yadisk.YaDisk(token="your_yadisk_token")
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Функции для работы с пользователями
 
 # Класс для хранения информации о пользователе
 class User(UserMixin):
@@ -45,24 +42,18 @@ def load_users():
             if len(parts) != 2:
                 continue
             key, value = parts
-            users[key.strip()] = value.strip()
+            users[key.strip()] = User(key.strip(), value.strip(), 'teacher' if key.strip() == 'teacher' else 'student')
     return users
 
 # Функция для сохранения информации о пользователе на Яндекс.Диск
 def save_user_to_yadisk(user):
-    with yadisk.YaDisk(token="your_yadisk_token") as y:
-        with y.upload(user.username + ".txt", overwrite=True) as f:
-            f.write(f"username:{user.username}\npassword:{user.password}\nrole:{user.role}")
+    # Здесь можно реализовать сохранение информации о пользователе на Яндекс.Диск, если это необходимо
+    pass
 
 # Функция для загрузки информации о пользователе с Яндекс.Диска
 def load_user_from_yadisk(username):
-    with yadisk.YaDisk(token="your_yadisk_token") as y:
-        with y.download(username + ".txt") as f:
-            user_info = {}
-            for line in f:
-                key, value = line.strip().split(':')
-                user_info[key] = value
-            return User(user_info['username'], user_info['password'], user_info['role'])
+    # Здесь можно реализовать загрузку информации о пользователе с Яндекс.Диска, если это необходимо
+    pass
 
 # Загрузка пользователей
 users = load_users()
@@ -73,6 +64,7 @@ def load_user(user_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    users = load_users()  # Загружаем пользователей при каждом запросе на логин
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -115,7 +107,6 @@ def index():
             filename = file.filename
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-            save_to_yadisk(file_path)
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
@@ -142,12 +133,6 @@ def list_files_on_yadisk(folder_path):
     files = y.listdir(folder_path)
     files_list = [(file.name, file.path) for file in files]
     return files_list
-
-def save_to_yadisk(file_path):
-    # Проверяем, начинается ли имя файла с префикса temp_
-    if not os.path.basename(file_path).startswith('temp_'):
-        # Если имя файла не начинается с префикса temp_, загружаем его на Яндекс.Диск
-        y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
 
 @app.route('/clear_data', methods=['GET'])
 def clear_data():

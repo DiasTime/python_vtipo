@@ -124,4 +124,19 @@ def process_pptx(file_path):
     return slides_data
 
 if __name__ == '__main__':
-  webview.start()
+  app.run()
+  
+  
+  
+#  project_folder/ 
+# ├── templates/
+# │   ├── files.html
+# │   ├── index.html
+# │   ├── pdf_template.html
+# │   ├── pptx_template.html
+# │   ├── result.html
+# │   ├── word_template.html
+# │   └── teacher_index.html
+# ├── app.py
+# ├── README.md
+# └── TODO

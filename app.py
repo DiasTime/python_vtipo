@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, send_file, url_for
+from flask import Flask, render_template, request, send_from_directory, send_file, url_for, redirect, session
 import os
 from docx import Document
 from pptx import Presentation
@@ -6,32 +6,32 @@ from PIL import Image
 from io import BytesIO
 import base64
 import fitz
-import yadisk
-import webview
 
 app = Flask(__name__)
-window = webview.create_window('dias_app',app)
-
-# Токен для доступа к Яндекс.Диску
-y = yadisk.YaDisk(token="y0_AgAAAAAl5jRpAAtKfAAAAAD6_t3BAABRqHACUIJMrJ4PRAckXHu7iVOojw")
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = 'your_secret_key'
 
-def list_files_on_yadisk(folder_path):
-    files = y.listdir(folder_path)
-    files_list = [(file.name, file.path) for file in files]
-    return files_list
+# Простой список пользователей и их паролей
+TEACHER_USERS = {'teacher1': 'password1', 'teacher2': 'password2'}
+STUDENT_USERS = {'student1': 'password1', 'student2': 'password2'}
 
-def save_to_yadisk(file_path):
-    # Проверяем, начинается ли имя файла с префикса temp_
-    if not os.path.basename(file_path).startswith('temp_'):
-        # Если имя файла не начинается с префикса temp_, загружаем его на Яндекс.Диск
-        y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
+# Функция для аутентификации пользователя
+def authenticate(username, password, user_type):
+    if user_type == 'teacher':
+        users = TEACHER_USERS
+    elif user_type == 'student':
+        users = STUDENT_USERS
+    
+    if username in users and users[username] == password:
+        return True
+    return False
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    yadisk_files = list_files_on_yadisk('/uploads')
+    if 'username' not in session:
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         file = request.files['file']
@@ -39,7 +39,6 @@ def index():
             filename = file.filename
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-            save_to_yadisk(file_path)
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
@@ -58,7 +57,27 @@ def index():
                 slides_data = [{"text": text, "images": []}]
                 return render_template('pptx_template.html', slides=slides_data, filename=filename)
             
-    return render_template('index.html', yadisk_files=yadisk_files)
+    return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user_type = request.form['user_type']
+        if authenticate(username, password, user_type):
+            session['username'] = username
+            session['user_type'] = user_type
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html', error='Invalid username or password.')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    session.pop('user_type', None)
+    return redirect(url_for('login'))
 
 @app.route('/clear_data', methods=['GET'])
 def clear_data():

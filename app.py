@@ -124,4 +124,4 @@ def process_pptx(file_path):
     return slides_data
 
 if __name__ == '__main__':
-  webview.start()
+  app.run(debug=True)

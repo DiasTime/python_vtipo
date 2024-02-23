@@ -94,26 +94,26 @@
     </style>
 </head>
 <body>
-    <h1>Files on Yandex Disk</h1>
+    <h1>Доступные лекции</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept=".docx, .pdf, .pptx" id="fileInput">
-        <label for="fileInput">Choose File</label>
-        <button type="submit">Upload</button>
+        <label for="fileInput">Выберете Лекцию</label>
+        <button type="submit">Открыть</button>
     </form>
 
     <form method="POST" style="margin-bottom: 20px;">
-        <label for="query">Search:</label>
+        <label for="query">Поиск:</label>
         <input type="text" id="query" name="query">
-        <button type="submit">Search</button>
+        <button type="submit">Поиск</button>
     </form>
 
     <form method="POST">
-        <label for="sort_by">Sort by:</label>
+        <label for="sort_by">Сортировать по:</label>
         <select name="sort_by" id="sort_by">
-            <option value="name">Name</option>
-            <option value="date">Date</option>
+            <option value="name">по алфовиту</option>
+
         </select>
-        <button type="submit">Sort</button>
+        <button type="submit">Сортировка</button>
     </form>
 
     <ul>

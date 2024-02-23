@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, send_file, url_for
+from flask import Flask, render_template, request, send_from_directory, send_file
 import os
 from docx import Document
 from pptx import Presentation
@@ -7,10 +7,8 @@ from io import BytesIO
 import base64
 import fitz
 import yadisk
-import webview
 
 app = Flask(__name__)
-window = webview.create_window('dias_app',app)
 
 # Токен для доступа к Яндекс.Диску
 y = yadisk.YaDisk(token="y0_AgAAAAAl5jRpAAtKfAAAAAD6_t3BAABRqHACUIJMrJ4PRAckXHu7iVOojw")
@@ -23,23 +21,55 @@ def list_files_on_yadisk(folder_path):
     files_list = [(file.name, file.path) for file in files]
     return files_list
 
-def save_to_yadisk(file_path):
-    # Проверяем, начинается ли имя файла с префикса temp_
-    if not os.path.basename(file_path).startswith('temp_'):
-        # Если имя файла не начинается с префикса temp_, загружаем его на Яндекс.Диск
-        y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
+def search_files(files, query):
+    if not query:
+        return files
+    query = query.lower()
+    return [file for file in files if query in file[0].lower()]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    query = request.form.get('query')
+    sort_by = request.form.get('sort_by')
     yadisk_files = list_files_on_yadisk('/uploads')
 
+    # Применяем поиск
+    yadisk_files = search_files(yadisk_files, query)
+
+    # Сортируем файлы, если указан критерий сортировки
+    if sort_by == 'name':
+        yadisk_files.sort(key=lambda x: x[0])
+    elif sort_by == 'date':
+        yadisk_files.sort(key=lambda x: x[1].split('/')[-1])
+        if filename.endswith('.docx'):
+                text = process_word(file_path)
+                return render_template('word_template.html', text=text, filename=filename) 
+            
+        elif filename.endswith('.pdf'):
+                filename, images = process_pdf(file_path)
+                return render_template('pdf_template.html', filename=filename, images=images)
+            
+        elif filename.endswith('.pptx'):
+                slides_data = process_pptx(file_path)
+                return render_template('pptx_template.html', slides=slides_data, filename=filename)
+            
+        else:
+                text = "Unsupported file format"
+                slides_data = [{"text": text, "images": []}]
+                return render_template('pptx_template.html', slides=slides_data, filename=filename)
+    return render_template('student.html', yadisk_files=yadisk_files)
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
     if request.method == 'POST':
         file = request.files['file']
         if file:
             filename = file.filename
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-            save_to_yadisk(file_path)
+            # Не загружаем файл на Яндекс.Диск, только сохраняем локально
+            # y.upload(file_path, f'/uploads/{os.path.basename(file_path)}')
 
             if filename.endswith('.docx'):
                 text = process_word(file_path)
@@ -57,16 +87,9 @@ def index():
                 text = "Unsupported file format"
                 slides_data = [{"text": text, "images": []}]
                 return render_template('pptx_template.html', slides=slides_data, filename=filename)
-            
-    return render_template('index.html', yadisk_files=yadisk_files)
 
-@app.route('/clear_data', methods=['GET'])
-def clear_data():
-    if request.args.get('key') == 'clear_all_data':
-        y.remove('/uploads')
-        return "Data cleared successfully."
-    else:
-        return "Invalid key."
+    return "File upload failed."
+
 
 @app.route('/open_from_yadisk/<path:file_path>')
 def open_from_yadisk(file_path):
@@ -75,16 +98,6 @@ def open_from_yadisk(file_path):
         y.download(file_path, f)
 
     return send_file(temp_file, as_attachment=True)
-
-@app.route('/files', methods=['GET'])
-def list_files():
-    yadisk_files = list_files_on_yadisk('/uploads')
-    return render_template('files.html', files=yadisk_files)
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 def process_word(file_path):
     document = Document(file_path)
     text = ""
@@ -122,10 +135,6 @@ def process_pptx(file_path):
                 slide_data["images"].append(image_data)
         slides_data.append(slide_data)
     return slides_data
-
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
 
-#   salam
-#   dias
-#   lolkek is here 

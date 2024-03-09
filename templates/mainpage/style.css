@@ -235,9 +235,9 @@ footer {
 footer a {
   color: #1a1a1a;
 }
-
 .footer-content {
-  width: 1180px;
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
   padding-top: 50px;
   display: flex;

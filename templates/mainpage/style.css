@@ -147,6 +147,11 @@ ul li:hover a::after {
   right: 10px;
 }
 
+#uroki {
+  margin-bottom: 40px;
+  margin-left: 40%;
+}
+
 .workshop-list-carousel {
   width: 1240px;
   margin: 0 auto;

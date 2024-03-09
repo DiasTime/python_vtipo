@@ -39,6 +39,9 @@ span {
   display: flex;
   cursor: pointer;
 }
+.logo a {
+  display: flex;
+}
 .logo-title {
   color: #1a1a1a;
   font-size: 20px;
@@ -74,7 +77,7 @@ span {
 }
 
 .members ul li {
-  background-color: #c7b8ec;
+  background-color: #e6e1f9;
   padding: 5px 15px;
   border-radius: 5px;
   transition: all 0.1s ease;
@@ -248,7 +251,7 @@ footer a {
 .footer-right {
   float: right;
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 .brands {
   display: flex;

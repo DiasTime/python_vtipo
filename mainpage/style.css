@@ -269,13 +269,36 @@ footer a {
 
 .lession {
   padding-top: 20px;
+  max-width: 990px;
+  margin: 0 auto;
 }
 
 .video {
-  padding: 20px 0;
+  padding-top: 20px;
+  padding-bottom: 40px;
 }
 
 .author {
   padding: 10px 0;
   font-size: 12px;
+}
+
+.chapter {
+  padding: 20px 0;
+}
+
+.chapter-title {
+  padding-bottom: 10px;
+}
+
+.chapter-content p {
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.subtitle {
+  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 0;
 }

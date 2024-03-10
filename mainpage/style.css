@@ -289,11 +289,27 @@ footer a {
 
 .chapter-title {
   padding-bottom: 10px;
+  display: flex;
+  gap: 25px;
+}
+
+#showButton {
+  margin: -10px;
+  font-size: 40px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+#showButton:hover {
+  transform: scale(1.1);
 }
 
 .chapter-content p {
   font-size: 18px;
   line-height: 25px;
+}
+
+.hidden {
+  display: none;
 }
 
 .subtitle {

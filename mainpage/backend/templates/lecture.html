@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lecture.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .lecture-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .lecture-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .lecture-content {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .youtube-video {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="lecture-container">
+        <h1 class="lecture-title">{{ lecture.title }}</h1>
+        <div class="lecture-content">{{ content|safe }}</div>
+        <div class="youtube-video">
+            <iframe width="560" height="315" src="{{ lecture.youtube_code }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <a href="{{ url_for('index') }}">Вернуться к списку лекций</a>
+    </div>
+</body>
+</html>
